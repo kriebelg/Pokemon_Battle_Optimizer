@@ -1,3 +1,7 @@
+from typing import Any
+from __future__ import annotations
+
+
 class Type:
     """
     A Pokemon type.
@@ -46,6 +50,30 @@ class Pokemon:
         self.type2 = type2
         self.stats = stats
         self.bst = bst
+<<<<<<< Updated upstream
 
 
 
+=======
+class TypeVertex:
+    """
+        A class to represent a vertex in a graph
+
+        Instance Attributes:
+            - item: The type of the pokemon
+            - neighbors: a dictionary of neighbors where key represents the strength of connection
+            (when the float is below  ) and the value is the vertex itself
+        """
+    item: Any
+    neighbors: dict[float, set[TypeVertex]]
+    def __init__(self, item: Any, neighbors: dict[float, set[TypeVertex]]) -> None:
+        self.item = item
+        self.neighbors = neighbors
+class TypeGraph:
+    """
+        A class to represent the types and the interactions.
+
+        Instance Attributes:
+            - verticies: a dictionary representing the graphs verticies
+        """
+>>>>>>> Stashed changes
