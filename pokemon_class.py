@@ -50,11 +50,7 @@ class Pokemon:
         self.type2 = type2
         self.stats = stats
         self.bst = bst
-<<<<<<< Updated upstream
 
-
-
-=======
 class TypeVertex:
     """
         A class to represent a vertex in a graph
@@ -76,4 +72,4 @@ class TypeGraph:
         Instance Attributes:
             - verticies: a dictionary representing the graphs verticies
         """
->>>>>>> Stashed changes
+
