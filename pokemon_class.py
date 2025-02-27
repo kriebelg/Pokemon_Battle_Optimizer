@@ -47,14 +47,5 @@ class Pokemon:
         self.stats = stats
         self.bst = bst
 
-class Team: 
-    """A class to represent a team of Pokemon. # do we need this??
-    
-    """
-    pokemon1: Pokemon
-    pokemon2: Pokemon | None
-    pokemon3: Pokemon | None
-    pokemon4: Pokemon | None
-    pokemon5: Pokemon | None
-    pokemon6: Pokemon | None
+
 
