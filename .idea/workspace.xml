@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4e06599d-ee13-4d36-b03b-a8a04e2daa5e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/graph_algorithm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pokemon_type_data_scraper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph_algorithm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pokemon_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_class.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -48,16 +47,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.graph_algorithm.executor": "Run",
-    "Python.pokemon_type_data_scraper.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/yjain/Desktop/University of Toronto/Fall 24/Csc111 (CS 2)/csc111/assignments/CSC111Project2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.graph_algorithm.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pokemon_type_data_scraper.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/yjain/Desktop/University of Toronto/Fall 24/Csc111 (CS 2)/csc111/assignments/CSC111Project2&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="graph_algorithm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CSC111Project2" />

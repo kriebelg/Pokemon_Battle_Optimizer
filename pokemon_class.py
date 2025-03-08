@@ -90,8 +90,9 @@ class TypeGraph:
             - verticies: a dictionary representing the graphs verticies
         """
     vertices: dict[Any, TypeVertex]
+
     def __init__(self) -> None:
-        self.vertices = {} # Initialize Empty Graph
+        self.vertices = {}  # Initialize Empty Graph
 
     def add_vertex(self, item: Any) -> None:
         self.vertices[item] = TypeVertex(item, {0.0: set(), 0.5: set(), 1.0: set(), 2.0: set()}, {0.0: set(), 0.5: set(), 1.0: set(), 2.0: set()})
