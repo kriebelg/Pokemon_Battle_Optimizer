@@ -50,3 +50,14 @@ def strong_weak(chosen_pokemons):
                     else:
                         strong[poke] = 1
     return strong, weak
+def dict_subtraction(strong, weak):
+    final_dict = {}
+    for poke_type in weak:
+        if poke_type in strong:
+            temp = weak[poke_type] - strong[poke_type]
+            if temp > 0:
+                final_dict[poke_type] = temp
+        else:
+            final_dict[poke_type] = weak[poke_type]
+
+    return final_dict

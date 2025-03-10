@@ -62,7 +62,8 @@ class TypeVertex:
         - item: The type of the Pokémon (e.g., 'Fire', 'Water').
         - outgoing_neighbors: A dictionary where keys are weights (2.0, 1.0, 0.5, 0.0)
                              and values are sets of TypeVertex objects this type attacks.
-        - incoming_neighbors: A set where elements represnt the type vertecies attacking it
+        - incoming_neighbors: A dictionary where keys are weights (2.0, 1.0, 0.5, 0.0)
+                             and values are sets of TypeVertex objects this type attacks.
     """
     item: Any
     outgoing_neighbors: Dict[float, Set[TypeVertex]]
