@@ -24,5 +24,3 @@ def read_effectiveness(file_path):
             effectiveness.append([float(val) for val in values])  # Convert values to floats
 
     return types, effectiveness
-
-
