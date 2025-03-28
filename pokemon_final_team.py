@@ -1,6 +1,6 @@
 import csv
 
-from csc111.CSC111Project2 import pokemon_data_scraper
+import pokemon_data_scraper
 from pokemon_class import Pokemon, Type
 from graph_algorithm import recommend_top_types
 def get_team_bst(team: Pokemon | list[Pokemon]):
