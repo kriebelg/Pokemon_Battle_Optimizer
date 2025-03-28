@@ -3,11 +3,14 @@ import requests
 import io
 import pandas as pd
 import random
+from pokemon_data_scraper import convert_pokemon_to_id
+# from pokemon_final_team import 
 
 pygame.init()
 
 WIDTH, HEIGHT = 800, 600
 BLACK, WHITE, RED = (0, 0, 0), (255, 255, 255), (255, 0, 0)
+ENEMY_TEAM_OFFSET, USER_TEAM_OFFSET = 250, 440
 FONT = pygame.font.SysFont("consolas", 20)
 BASE_URL = "https://img.pokemondb.net/sprites/"
 ADD_ONS = ("scarlet-violet/normal/1x/", "x-y/normal/", "sun-moon/normal/1x/", "sword-shield/normal/")
@@ -35,9 +38,6 @@ class Game:
         self.enter_button = None
         self.random_button = None
         self.back_button = None
-
-        self.enemy_team_offset = 250
-        self.user_team_offset = 440
 
     def load_sprite(self, pokemon_name: str) -> pygame.Surface:
         """Tries to load a Pokémon sprite from the web, handling variations in naming."""
@@ -142,8 +142,8 @@ class Game:
             
     def display_results(self) -> None:
         """Displays results on screen."""
-        enemy_team_positions = self.get_team_positions(self.enemy_team_offset)
-        user_team_positions = self.get_team_positions(self.user_team_offset)
+        enemy_team_positions = self.get_team_positions(ENEMY_TEAM_OFFSET)
+        user_team_positions = self.get_team_positions(USER_TEAM_OFFSET)
 
         for i in range(6):
             start_pos = user_team_positions[i]
@@ -211,7 +211,7 @@ class Game:
         if invalid_names:
             self.error_message = "Invalid Pokémon names: " + ", ".join(invalid_names)
         else:
-            self.user_team = run_algorithm()
+            self.user_team = run_algorithm(self.convert_team_to_ints(), "pokemon_data.csv")
             self.pokemon_sprites.update({name.lower(): self.load_sprite(name) for name in set(self.user_team)})
             self.state = RESULT_SCREEN
             self.error_message = None
@@ -234,6 +234,12 @@ class Game:
         else:
             self.enemy_team[self.input_index] += event.unicode.lower()
 
+    def convert_team_to_ints(self) -> list[int]:
+        id_list = []
+        for pkmn in self.enemy_team:
+            id_list.append(convert_pokemon_to_id(pkmn, "pokemon_data.csv"))
+        return id_list
+
     def run(self):
         while self.running:
             self.screen.blit(self.background, (0, 0))
@@ -244,7 +250,7 @@ class Game:
             pygame.display.flip()
         pygame.quit()
 
-def run_algorithm() -> list[str]:  # placeholder for algorithm function
+def run_algorithm(team, data) -> list[str]:  # placeholder for algorithm function
     return ["charmander", "quilava", "quilava", "quilava", "quilava", "quilava"] # i love quilava
 
 def generate_random_team(data):

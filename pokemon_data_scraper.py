@@ -31,5 +31,15 @@ def process_row(row: list[str]) -> list:
           int(row[8]),
           int(row[9])]
 
+def convert_pokemon_to_id(pokemon_name: str, filename: str) -> int:
+  """Convert a pokemon name to its id"""
+  with open(filename) as file:
+      reader = csv.reader(file)
+      next(reader)  # skip header row
+
+      for row in reader:
+          if row[1].lower() == pokemon_name.lower():
+              return int(row[0])
+
 if __name__ == '__main__':
     get_pokemon_data([1,2,3], filename='pokemon_data.csv')
