@@ -31,3 +31,5 @@ def process_row(row: list[str]) -> list:
           int(row[8]),
           int(row[9])]
 
+if __name__ == '__main__':
+    get_pokemon_data([1,2,3], filename='pokemon_data.csv')

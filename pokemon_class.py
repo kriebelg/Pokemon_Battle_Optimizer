@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import csv
 from typing import Optional
 
-from csc111.CSC111Project2.graph_algorithm import recommend_top_types
-import pokemon_data_scraper
 
 
 class Type:
