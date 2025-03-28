@@ -48,7 +48,7 @@ class Pokemon:
     stats: list[int]
     bst: int
 
-    def __init__(self, pokemon_id: int, name: str, type1: Type, type2: Type, attack: int, defense: int, spec_attack: int, spec_defense: int, speed: int):
+    def __init__(self, pokemon_id: int, name: str, type1: Type, type2: Optional[Type], attack: int, defense: int, spec_attack: int, spec_defense: int, speed: int):
         """Initialize a new Pokemon instance."""
         self.pokemon_id = pokemon_id
         self.name = name

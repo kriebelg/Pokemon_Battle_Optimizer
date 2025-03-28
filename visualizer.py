@@ -3,8 +3,10 @@ import requests
 import io
 import pandas as pd
 import random
-from pokemon_data_scraper import convert_pokemon_to_id
-# from pokemon_final_team import 
+from pokemon_data_scraper import get_pokemon_data, convert_pokemon_to_id
+from graph_algorithm import recommend_top_types
+from pokemon_final_team import get_user_pokemon, get_pokemon
+from pokemon_class import Pokemon
 
 pygame.init()
 
@@ -50,6 +52,7 @@ class Game:
             try:
                 sprite = self.fetch_sprite(BASE_URL + url + formatted_name + ".png")
                 if sprite:
+                    self.pokemon_sprites[pokemon_name] = sprite
                     return self.adjust_sprite(sprite, url)
             except Exception as e:
                 print(f"Error loading {pokemon_name}: {e}")
@@ -74,7 +77,7 @@ class Game:
         if url == ADD_ONS[1]:
             y_offset = 20
         elif url == ADD_ONS[2]:
-            y_offest = 20
+            y_offset = 0
         elif url == ADD_ONS[3]:
             y_offset = 0
         adjusted_sprite.blit(sprite, (0, y_offset))
@@ -206,12 +209,12 @@ class Game:
         """Checks if inputted enemy team is valid."""
         self.pokemon_sprites = {name: self.load_sprite(name) for name in set(self.enemy_team)}
         invalid_names = [name for name in self.enemy_team if not self.pokemon_sprites.get(name)]
-        print(self.pokemon_sprites)
 
         if invalid_names:
             self.error_message = "Invalid Pokémon names: " + ", ".join(invalid_names)
         else:
-            self.user_team = run_algorithm(self.convert_team_to_ints(), "pokemon_data.csv")
+            # self.user_team = get_user_pokemon((get_pokemon(self.enemy_team, "pokemon_data.csv"), 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
+            self.user_team = get_user_pokemon(get_pokemon([convert_pokemon_to_id(pkmn, "pokemon_data.csv") for pkmn in self.enemy_team], "pokemon_data.csv"), "pokemon_data.csv", "chart.csv")
             self.pokemon_sprites.update({name.lower(): self.load_sprite(name) for name in set(self.user_team)})
             self.state = RESULT_SCREEN
             self.error_message = None
@@ -234,11 +237,6 @@ class Game:
         else:
             self.enemy_team[self.input_index] += event.unicode.lower()
 
-    def convert_team_to_ints(self) -> list[int]:
-        id_list = []
-        for pkmn in self.enemy_team:
-            id_list.append(convert_pokemon_to_id(pkmn, "pokemon_data.csv"))
-        return id_list
 
     def run(self):
         while self.running:
@@ -252,6 +250,12 @@ class Game:
 
 def run_algorithm(team, data) -> list[str]:  # placeholder for algorithm function
     return ["charmander", "quilava", "quilava", "quilava", "quilava", "quilava"] # i love quilava
+
+def convert_team_to_ints(team) -> list[int]:
+    id_list = []
+    for pkmn in team:
+        id_list.append(convert_pokemon_to_id(pkmn, "pokemon_data.csv"))
+    return id_list
 
 def generate_random_team(data):
     """Generates a random Pokémon team."""

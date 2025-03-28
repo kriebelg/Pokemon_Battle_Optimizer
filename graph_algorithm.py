@@ -176,7 +176,6 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     graph = graph_builder(file_path)
 
     strong, weak = strong_weak(enemy_team)
-
     final_dict = dict_subtraction(strong, weak)
 
     # Generate all candidate types
@@ -192,39 +191,42 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     # Sort candidates by score (descending)
     sorted_candidates = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
+    enemy_team_copy = list(enemy_team[:])
+    results = []
+
     # Get top X and format as strings
     if len(sorted_candidates) >= len(enemy_team):
         top_candidates = sorted_candidates[:top_x]
 
         # Format top types and assign target enemies
-        results = []
         for cand, score in top_candidates:
             # Format recommended type: string for single, tuple for dual
             rec_type = cand[0] if len(cand) == 1 else cand
             # Calculate effectiveness against each enemy
-            effectivenesses = [get_overall_effectiveness(graph, rec_type, enemy) for enemy in enemy_team]
+            effectivenesses = [get_overall_effectiveness(graph, rec_type, enemy) for enemy in enemy_team_copy]
             max_eff = max(effectivenesses)
             target_index = effectivenesses.index(max_eff)
-            target_enemy = enemy_team[target_index]
+            target_enemy = enemy_team_copy.pop(target_index)
             results.append([rec_type, target_enemy])
-            enemy_team.pop(target_index)
-        return results
+        # return results
     else:
-        results = []
         for cand, score in sorted_candidates:
             # Format recommended type: string for single, tuple for dual
             rec_type = cand[0] if len(cand) == 1 else cand
             # Calculate effectiveness against each enemy
-            effectivenesses = [get_overall_effectiveness(graph, rec_type, enemy) for enemy in enemy_team]
+            effectivenesses = [get_overall_effectiveness(graph, rec_type, enemy) for enemy in enemy_team_copy]
             max_eff = max(effectivenesses)
             target_index = effectivenesses.index(max_eff)
-            target_enemy = enemy_team[target_index]
+            target_enemy = enemy_team_copy.pop(target_index)
             results.append([rec_type, target_enemy])
-            enemy_team.pop(target_index)
 
-        results.extend(recommend_top_types(enemy_team, file_path='chart.csv', top_x=len(enemy_team)))
-        return results
+        results.extend(recommend_top_types(enemy_team_copy, file_path='chart.csv', top_x=len(enemy_team_copy)))
+        # return results
+    
+    results_dict = {enemy: rec for rec, enemy in results}
+    ordered_results = [(results_dict[enemy], enemy) for enemy in enemy_team]
 
+    return ordered_results
 
 
 if __name__ == '__main__':
@@ -235,5 +237,3 @@ if __name__ == '__main__':
     what_u_should_use_against = [item[1] for item in results]
     print(what_u_should_use)
     print(what_u_should_use_against)
-
-
