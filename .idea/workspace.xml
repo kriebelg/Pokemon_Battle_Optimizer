@@ -46,16 +46,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.graph_algorithm.executor": "Debug",
-    "Python.pokemon_type_data_scraper.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/yjain/Desktop/University of Toronto/Fall 24/Csc111 (CS 2)/csc111/miscellaneous/starter (1)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.graph_algorithm.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.pokemon_type_data_scraper.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/yjain/Desktop/University of Toronto/Fall 24/Csc111 (CS 2)/csc111/miscellaneous/starter (1)&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="graph_algorithm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CSC111Project2" />

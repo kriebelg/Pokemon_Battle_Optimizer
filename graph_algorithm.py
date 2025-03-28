@@ -30,16 +30,12 @@ def get_effectiveness(graph, attacker, defender):
 
 
 # Helper function to get maximum effectiveness for a dual-type attacker
-def get_max_effectiveness(graph, attacker_types, defender):
-    if isinstance(attacker_types, tuple):
-        # Dual-type attacker: maximum effectiveness of the two types
-        eff1 = get_effectiveness(graph, attacker_types[0], defender)
-        eff2 = get_effectiveness(graph, attacker_types[1], defender)
-        return max(eff1, eff2)
-    else:
-        # Single-type attacker: direct effectiveness
-        return get_effectiveness(graph, attacker_types, defender)
-
+def get_overall_effectiveness(graph, recommended_types, enemy_types):
+    """Calculate the maximum offensive effectiveness of recommended_types against enemy_types."""
+    if isinstance(recommended_types, str):
+        return get_effectiveness(graph, recommended_types, enemy_types)
+    elif isinstance(recommended_types, tuple):
+        return max(get_effectiveness(graph, r, enemy_types) for r in recommended_types)
 
 def strong_weak(chosen_pokemons):
     strong = {}
@@ -52,7 +48,7 @@ def strong_weak(chosen_pokemons):
             # Dual-type Pokémon
             # Attacking: check max effectiveness against each type
             for pok_type in all_types:
-                max_eff = get_max_effectiveness(graph, chosen_pokemon, pok_type)
+                max_eff =  max(get_effectiveness(graph, chosen_pokemon[0], pok_type), get_effectiveness(graph, chosen_pokemon[1], pok_type))
                 if max_eff == 2.0:
                     strong[pok_type] = strong.get(pok_type, 0) + 1
                 elif max_eff in (0.5, 0.0):
@@ -113,6 +109,8 @@ def get_attacking_effectiveness(graph, attacker, defender):
 def get_defense_effectiveness(graph, attack_type, defend_types):
     """Get effectiveness of attack_type against defend_types (product for dual types)."""
     multiplier = 1.0
+    if isinstance(defend_types, str):
+        defend_types = (defend_types,)
     for defend_type in defend_types:
         for weight, vertices in graph.vertices[defend_type].incoming_neighbors.items():
             if attack_type in {v.item for v in vertices}:
@@ -125,10 +123,15 @@ def score_candidate(graph, candidate_types, enemy_team):
     """Score a candidate type against the enemy team."""
     score = 0
     for enemy in enemy_team:
-        # Offensive effectiveness: best attack option
-        off_eff = max(get_attacking_effectiveness(graph, c, enemy) for c in candidate_types)
-        # Defensive vulnerability: enemy's effectiveness against candidate
-        def_vuln = get_defense_effectiveness(graph, enemy, candidate_types)
+        if isinstance(candidate_types, str):
+            candidate_list = (candidate_types,)
+        else:
+            candidate_list = candidate_types
+        off_eff = max(
+            get_attacking_effectiveness(graph, c, enemy) if isinstance(enemy, str) else get_effectiveness(graph, c,
+                                                                                                          enemy) for c
+            in candidate_list)
+        def_vuln = get_defense_effectiveness(graph, enemy, candidate_list)
         score += off_eff - def_vuln
     return score
 
@@ -179,12 +182,8 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     # Generate all candidate types
     types = list(final_dict.keys())
     single_types = [(t,) for t in types]
-    dual_types = []
-    for i in range(len(types)):
-        for j in range(i + 1, len(types)):
-            dual_types.append((types[i], types[j]))
+    dual_types = [(types[i], types[j]) for i in range(len(types)) for j in range(i + 1, len(types))]
     candidates = single_types + dual_types
-
     # Score each candidate
     scores = {}
     for cand in candidates:
@@ -194,16 +193,47 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     sorted_candidates = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
     # Get top X and format as strings
-    top_candidates = sorted_candidates[:top_x]
-    top_types = [(cand[0], cand[1]) if len(cand) > 1 else cand[0] for cand, _ in top_candidates]
+    if len(sorted_candidates) >= len(enemy_team):
+        top_candidates = sorted_candidates[:top_x]
 
-    return top_types, scores
+        # Format top types and assign target enemies
+        results = []
+        for cand, score in top_candidates:
+            # Format recommended type: string for single, tuple for dual
+            rec_type = cand[0] if len(cand) == 1 else cand
+            # Calculate effectiveness against each enemy
+            effectivenesses = [get_overall_effectiveness(graph, rec_type, enemy) for enemy in enemy_team]
+            max_eff = max(effectivenesses)
+            target_index = effectivenesses.index(max_eff)
+            target_enemy = enemy_team[target_index]
+            results.append([rec_type, target_enemy])
+            enemy_team.pop(target_index)
+        return results
+    else:
+        results = []
+        for cand, score in sorted_candidates:
+            # Format recommended type: string for single, tuple for dual
+            rec_type = cand[0] if len(cand) == 1 else cand
+            # Calculate effectiveness against each enemy
+            effectivenesses = [get_overall_effectiveness(graph, rec_type, enemy) for enemy in enemy_team]
+            max_eff = max(effectivenesses)
+            target_index = effectivenesses.index(max_eff)
+            target_enemy = enemy_team[target_index]
+            results.append([rec_type, target_enemy])
+            enemy_team.pop(target_index)
+
+        results.extend(recommend_top_types(enemy_team, file_path='chart.csv', top_x=len(enemy_team)))
+        return results
 
 
 
 if __name__ == '__main__':
-    g, scores = recommend_top_types([('Fire', 'Water'), 'Grass', 'Electric'], file_path='chart.csv', top_x=5)
-    print(g, scores)
-
+    results = recommend_top_types(
+        [('Fire', 'Water'), 'Grass', 'Electric', ('Dragon', 'Poison'), ('Ground', 'Flying'), 'Water'],
+        file_path='chart.csv', top_x=6)
+    what_u_should_use = [item[0] for item in results]
+    what_u_should_use_against = [item[1] for item in results]
+    print(what_u_should_use)
+    print(what_u_should_use_against)
 
 
