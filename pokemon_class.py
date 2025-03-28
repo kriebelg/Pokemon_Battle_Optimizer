@@ -47,7 +47,6 @@ class Pokemon:
     type2: Optional[Type]
     stats: list[int]
     bst: int
-    score: float
 
     def __init__(self, pokemon_id: int, name: str, type1: Type, type2: Type, attack: int, defense: int, spec_attack: int, spec_defense: int, speed: int):
         """Initialize a new Pokemon instance."""
@@ -57,7 +56,6 @@ class Pokemon:
         self.type2 = type2
         self.stats = [attack, defense, spec_attack, spec_defense, speed]
         self.bst = sum(self.stats)
-        self.score = 0.0
 
 
 from typing import Any, Set, Dict

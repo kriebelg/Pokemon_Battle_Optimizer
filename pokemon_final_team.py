@@ -44,15 +44,6 @@ def filter_bst_team(team: list[Pokemon], bst_range: list[int]):
             team.remove(pokemon)
     return team
 
-def bst_type_score(team: list[Pokemon], type_dict):
-    for pokemon in team:
-        if (pokemon.type1, pokemon.type2) in type_dict:
-            pokemon.score = type_dict[(pokemon.type1, pokemon.type2)] * pokemon.bst
-            return
-        elif pokemon.type1 in type_dict:
-            pokemon.score = type_dict[pokemon.type1] * pokemon.bst
-            return
-
 def get_types(team: list[Pokemon]):
     team = []
     for pokemon in team:
@@ -66,26 +57,26 @@ def get_types(team: list[Pokemon]):
 def get_enemy_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_types='chart.csv'):
     '''get enemy pokemon based on bst and type'''
     types = get_types(team)
-    types, scores = recommend_top_types(types, file_types, len(team))
+    type = recommend_top_types(types, file_types, len(team))
+    typ = [item[0] for item in type]
     enemy_bst_range = ideal_bst_range(team)
     possible_poke = []
     with open(file_pokemon, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if row[2] in types or (row[2], row[3]) in types:
-                possible_poke = int(row[0])
+            if row[2] in types or (row[2], row[3]) in typ:
+                possible_poke.append(int(row[0]))
     poke_data = get_pokemon(possible_poke, file_pokemon)
     po_data = filter_bst_team(poke_data, enemy_bst_range)
-    bst_type_score(po_data, scores)
-    pok_sorted = sorted(po_data, key=lambda x: x.score, reverse=True)
+    pok_sorted = sorted(po_data, key=lambda x: x.bst, reverse=True)
     final_team = []
     count = len(team)
     for pokemon in pok_sorted:
         if count > 0:
             final_team.append(pokemon.name)
-            count -=1
+            count -= 1
     return final_team
 
 if __name__ == '__main__':
-    get_enemy_pokemon(get_pokemon([1,2,3], 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
-
+    g = get_enemy_pokemon(get_pokemon([1,2,3], 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
+    print(g)
