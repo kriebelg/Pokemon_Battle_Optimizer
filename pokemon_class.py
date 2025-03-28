@@ -1,7 +1,10 @@
 from __future__ import annotations
 
-import math
-from typing import Any, Optional
+import csv
+from typing import Optional
+
+from csc111.CSC111Project2.graph_algorithm import recommend_top_types
+import pokemon_data_scraper
 
 
 class Type:
@@ -23,42 +26,6 @@ class Type:
     def set_effectiveness(self, effectiveness_dict: dict[str, float]) -> None:
         """Set the effectiveness of this type for other types."""
         self.effectiveness = effectiveness_dict
-
-class BST:
-    """
-    a class that represnts the differet categories of BST and every pokemon in taht category
-
-    Instance Attribtes:
-        - bst_num: the avg of the bst
-        - mini: the minimum bst in this category
-        - maxi: the maximum bst in this category
-        - bst_pokemon: all the pokemon in this bst category
-    """
-    bst_num: int
-    mini: int
-    maxi: int
-    bst_pokemon: list[Pokemon]
-
-    def __init__(self):
-        self.bst_num = 0
-        self.mini = 0
-        self.maxi = 0
-        self.bst_pokemon = []
-
-    def get_team_bst(self, team: list[Pokemon] | Pokemon):
-        if isinstance(team, Pokemon):
-            self.mini = team.bst.mini
-            self.maxi = team.bst.maxi
-            self.bst_num = team.bst.bst_num
-            self.bst_pokemon = [team]
-        else:
-            for pokemon in team:
-                self.bst_num += pokemon.bst.get_team_bst(pokemon)
-                self.bst_pokemon.append(pokemon)
-                if pokemon.bst.mini < self.mini:
-                    self.mini = pokemon.bst.mini
-                if pokemon.bst.maxi > self.maxi:
-                    self.maxi = pokemon.bst.maxi
 
 
 
@@ -82,7 +49,8 @@ class Pokemon:
     type1: Type
     type2: Optional[Type]
     stats: list[int]
-    bst: BST
+    bst: int
+    score: float
 
     def __init__(self, pokemon_id: int, name: str, type1: Type, type2: Type, attack: int, defense: int, spec_attack: int, spec_defense: int, speed: int):
         """Initialize a new Pokemon instance."""
@@ -91,13 +59,8 @@ class Pokemon:
         self.type1 = type1
         self.type2 = type2
         self.stats = [attack, defense, spec_attack, spec_defense, speed]
-        self.bst = BST()
-
-    def get_bst(self) -> bst:
-        self.bst.bst_num = sum(self.stats)
-        self.bst.mini = sum(self.stats)
-        self.bst.maxi = sum(self.stats)
-        self.bst.bst_pokemon = [self]
+        self.bst = sum(self.stats)
+        self.score = 0.0
 
 
 from typing import Any, Set, Dict
@@ -192,6 +155,20 @@ class TypeGraph:
                 else:
                     zero_incoming.extend([elem.item for elem in incoming_connections])
         return one_half_attacks, one_half_incoming, one_attacks, one_incoming, two_attacks, two_incoming, zero_attacks, zero_incoming
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

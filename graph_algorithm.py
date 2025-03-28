@@ -203,7 +203,7 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
 
 if __name__ == '__main__':
     g, scores = recommend_top_types([('Fire', 'Water'), 'Grass', 'Electric'], file_path='chart.csv', top_x=5)
-
+    print(g, scores)
 
 
 
