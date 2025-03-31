@@ -1,6 +1,10 @@
+"""contains all of our classes and methods for type class and pokemon class
+
+"""
 from __future__ import annotations
 
 from typing import Optional
+from typing import Any
 
 
 class Type:
@@ -33,7 +37,8 @@ class Pokemon:
         - name: the name of the Pokemon
         - type1: the primary type of the Pokemon
         - type2: the secondary type of the Pokemon
-        - stats: a tuple containing the stats of the Pokemon (HP, Attack, Defense, Special Attack, Special Defense, Speed)
+        - stats: a tuple containing the stats of the Pokemon (HP, Attack, Defense, Special Attack, Special Defense,
+        Speed)
         - bst: the base stat total of the Pokemon
     """
     pokemon_id: int
@@ -54,9 +59,6 @@ class Pokemon:
         self.bst = sum(self.stats)
 
 
-from typing import Any, Set, Dict
-
-
 class TypeVertex:
     """
     A class to represent a vertex in a directed graph of Pokémon types.
@@ -69,8 +71,8 @@ class TypeVertex:
                              and values are sets of TypeVertex objects this type attacks.
     """
     item: Any
-    outgoing_neighbors: Dict[float, Set[TypeVertex]]
-    incoming_neighbors: Dict[float, Set[TypeVertex]]
+    outgoing_neighbors: dict[float, set[TypeVertex]]
+    incoming_neighbors: dict[float, set[TypeVertex]]
 
     def __init__(self, item: Any, outgoing_neighbors: dict, incoming_neighbors: set) -> None:
         """
@@ -151,4 +153,5 @@ class TypeGraph:
                     one_half_incoming.extend([elem.item for elem in incoming_connections])
                 else:
                     zero_incoming.extend([elem.item for elem in incoming_connections])
-        return one_half_attacks, one_half_incoming, one_attacks, one_incoming, two_attacks, two_incoming, zero_attacks, zero_incoming
+        return (one_half_attacks, one_half_incoming, one_attacks, one_incoming, two_attacks, two_incoming,
+                zero_attacks, zero_incoming)

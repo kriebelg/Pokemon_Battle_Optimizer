@@ -1,3 +1,6 @@
+"""functions and helpers to get the final team
+
+"""
 import csv
 import pokemon_data_scraper
 from pokemon_class import Pokemon

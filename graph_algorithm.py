@@ -1,3 +1,6 @@
+"""algorithm to create the type graph
+
+"""
 import pokemon_class
 from pokemon_type_data_scraper import read_effectiveness
 
@@ -121,10 +124,10 @@ def get_defense_effectiveness(graph, attack_type, defend_types):
     return multiplier
 
 
-def score_candidate(graph, candidate_types, enemy_team):
+def score_candidate(graph, candidate_types, enem_team):
     """Score a candidate type against the enemy team."""
     score = 0
-    for enemy in enemy_team:
+    for enemy in enem_team:
         if isinstance(candidate_types, str):
             candidate_list = (candidate_types,)
         else:
