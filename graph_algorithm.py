@@ -194,7 +194,8 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
             target_enemy = enemy_team_copy.pop(target_index)
             results.append([rec_type, target_enemy])
 
-        results.extend(recommend_top_types(enemy_team_copy, file_path='chart.csv', top_x=len(enemy_team_copy)))
+        if enemy_team_copy:
+            results.extend(recommend_top_types(enemy_team_copy, file_path='chart.csv', top_x=len(enemy_team_copy)))
 
     results_dict = {enemy: rec for rec, enemy in results}
     ordered_results = [(results_dict[enemy], enemy) for enemy in enemy_team]

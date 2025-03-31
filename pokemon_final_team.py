@@ -79,6 +79,12 @@ def get_types(team: list[Pokemon]):
             types.append((pokemon.type1, pokemon.type2))
     return tuple(types)
 
+def convert_team_to_ints(team) -> list[int]:
+    id_list = []
+    for pkmn in team:
+        id_list.append(convert_pokemon_to_id(pkmn, "pokemon_data.csv"))
+    return id_list
+
 def get_user_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_types='chart.csv'):
     '''get enemy pokemon based on bst and type'''
     enemy_types = get_types(team)
@@ -94,16 +100,17 @@ def get_user_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_
         
             if poke_types in top_types or row[2] in enemy_types:
                 possible_poke.append(int(row[0]))
+
     
     poke_data = get_pokemon(possible_poke, file_pokemon)
     po_data = filter_bst_team(poke_data, enemy_bst_range)
     
-    if len(po_data) < 6:
+    if len(po_data) < 6:  # case where multiple of the same pokemon are inputted 
         remaining_needed = 6 - len(po_data)
         additional_pokemon = [poke for poke in poke_data if poke not in po_data][:remaining_needed]
         po_data.extend(additional_pokemon)
     
-    pok_sorted = sorted(po_data, key=lambda x: x.bst, reverse=True)
+    pok_sorted = sorted(po_data, key=lambda x: x.bst, reverse=True)[:6]
 
     return ([pokemon.name for pokemon in pok_sorted][:6], top_types)
 

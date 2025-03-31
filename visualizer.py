@@ -5,7 +5,7 @@ import pandas as pd
 import random
 from pokemon_data_scraper import get_pokemon_data, convert_pokemon_to_id
 from graph_algorithm import recommend_top_types
-from pokemon_final_team import get_user_pokemon, get_pokemon
+from pokemon_final_team import get_user_pokemon, get_pokemon, get_types, convert_team_to_ints
 from pokemon_class import Pokemon
 
 pygame.init()
@@ -216,10 +216,14 @@ class Game:
         if invalid_names:
             self.error_message = "Invalid Pokémon names: " + ", ".join(invalid_names)
         else:
+            enemy_team_to_id = [convert_pokemon_to_id(pkmn, "pokemon_data.csv") for pkmn in self.enemy_team]
             # self.user_team = get_user_pokemon((get_pokemon(self.enemy_team, "pokemon_data.csv"), 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
-            self.user_team, type_matchups = get_user_pokemon(get_pokemon([convert_pokemon_to_id(pkmn, "pokemon_data.csv") for pkmn in self.enemy_team], \
-                                                          "pokemon_data.csv"), "pokemon_data.csv", "chart.csv")
-            self.align_teams()
+            self.user_team, type_matchups = get_user_pokemon(get_pokemon(enemy_team_to_id, "pokemon_data.csv"), "pokemon_data.csv", "chart.csv")
+            print("user team", self.user_team)
+            user_team_to_id = convert_team_to_ints(self.user_team)
+            print("user team types", get_types(get_pokemon(user_team_to_id, 'pokemon_data.csv')))
+            print("type matchups", type_matchups)
+            # self.align_teams()
             self.pokemon_sprites.update({name.lower(): self.load_sprite(name) for name in set(self.user_team)})
             self.state = RESULT_SCREEN
             self.error_message = None
