@@ -80,16 +80,16 @@ def get_user_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_
     
     poke_data = get_pokemon(possible_poke, file_pokemon)
     po_data = filter_bst_team(poke_data, enemy_bst_range)
+    
+    if len(po_data) < 6:
+        remaining_needed = 6 - len(po_data)
+        additional_pokemon = [poke for poke in poke_data if poke not in po_data][:remaining_needed]
+        po_data.extend(additional_pokemon)
+    
     pok_sorted = sorted(po_data, key=lambda x: x.bst, reverse=True)
 
-    final_team = []
-    count = len(team)
-    for pokemon in pok_sorted:
-        if count > 0:
-            final_team.append(pokemon.name)
-            count -= 1
-    return final_team
+    return [pokemon.name for pokemon in pok_sorted[:6]]
 
 if __name__ == '__main__':
-    g = get_user_pokemon(get_pokemon([1,2,3,4,5,6], 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
+    g = get_user_pokemon(get_pokemon([4,4,4,1,1,1], 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
     print(g)

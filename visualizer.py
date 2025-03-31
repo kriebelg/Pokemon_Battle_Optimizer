@@ -46,7 +46,7 @@ class Game:
         if pokemon_name in self.pokemon_sprites:
             return self.pokemon_sprites[pokemon_name]
 
-        formatted_name = pokemon_name.lower().replace(" ", "-").replace(".", "").replace("'", "").replace("♀", "-f").replace("♂", "-m")
+        formatted_name = pokemon_name.lower().replace(" ", "-").replace(".", "").replace("'", "").replace("♀", "-f").replace("♂", "-m").replace(":", "-")
 
         for url in ADD_ONS:
             try:
@@ -148,6 +148,9 @@ class Game:
         enemy_team_positions = self.get_team_positions(ENEMY_TEAM_OFFSET)
         user_team_positions = self.get_team_positions(USER_TEAM_OFFSET)
 
+        enemy_text = FONT.render("Enemy Team", True, BLACK)
+        self.screen.blit(enemy_text, (WIDTH // 2 - enemy_text.get_width() // 2, ENEMY_TEAM_OFFSET - 80))
+
         for i in range(6):
             start_pos = user_team_positions[i]
             end_pos = enemy_team_positions[i]
@@ -237,7 +240,6 @@ class Game:
         else:
             self.enemy_team[self.input_index] += event.unicode.lower()
 
-
     def run(self):
         while self.running:
             self.screen.blit(self.background, (0, 0))
@@ -247,9 +249,6 @@ class Game:
                 self.handle_event(event, mouse_pos)
             pygame.display.flip()
         pygame.quit()
-
-def run_algorithm(team, data) -> list[str]:  # placeholder for algorithm function
-    return ["charmander", "quilava", "quilava", "quilava", "quilava", "quilava"] # i love quilava
 
 def convert_team_to_ints(team) -> list[int]:
     id_list = []

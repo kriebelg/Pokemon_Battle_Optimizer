@@ -1,7 +1,6 @@
 import pokemon_class
 from pokemon_type_data_scraper import read_effectiveness
 
-
 def graph_builder(file_path):
     types, effectiveness = read_effectiveness(file_path)
     type_indices = {type_name: idx for idx, type_name in enumerate(types)}
@@ -12,7 +11,6 @@ def graph_builder(file_path):
         for pok_type in types:
             graph.add_attacking_edge(po_type, pok_type, effectiveness[type_indices[po_type]][type_indices[pok_type]])
     return graph
-
 
 def get_effectiveness(graph, attacker, defender):
     if isinstance(defender, tuple):
@@ -27,7 +25,6 @@ def get_effectiveness(graph, attacker, defender):
             if defender in {v.item for v in neighbors}:
                 return weight
         return 1.0  # Neutral effectiveness if no edge exists
-
 
 # Helper function to get maximum effectiveness for a dual-type attacker
 def get_overall_effectiveness(graph, recommended_types, enemy_types):
@@ -85,7 +82,6 @@ def strong_weak(chosen_pokemons):
                         poke = pokemon.item
                         strong[poke] = strong.get(poke, 0) + 1
     return strong, weak
-
 
 def dict_subtraction(strong, weak):
     final_dict = {}
@@ -231,9 +227,9 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
 
 if __name__ == '__main__':
     results = recommend_top_types(
-        [('Fire', 'Water'), 'Grass', 'Electric', ('Dragon', 'Poison'), ('Ground', 'Flying'), 'Water'],
+        ['Fire', 'Grass', 'Electric', 'Dragon', ('Ground', 'Fire'), 'Water'],
         file_path='chart.csv', top_x=6)
-    what_u_should_use = [item[0] for item in results]
-    what_u_should_use_against = [item[1] for item in results]
-    print(what_u_should_use)
-    print(what_u_should_use_against)
+    user_team = [item[0] for item in results]
+    enemy_team = [item[1] for item in results]
+    print("enemy team:", enemy_team)
+    print("user team:", user_team)
