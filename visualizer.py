@@ -15,7 +15,7 @@ BLACK, WHITE, RED = (0, 0, 0), (255, 255, 255), (255, 0, 0)
 ENEMY_TEAM_OFFSET, USER_TEAM_OFFSET = 250, 440
 FONT = pygame.font.SysFont("consolas", 20)
 BASE_URL = "https://img.pokemondb.net/sprites/"
-ADD_ONS = ("scarlet-violet/normal/1x/", "x-y/normal/", "sun-moon/normal/1x/", "sword-shield/normal/")
+ADD_ONS = ("scarlet-violet/normal/1x/", "x-y/normal/", "sun-moon/normal/1x/", "sword-shield/normal/", "home/normal/1x/")
 
 START_SCREEN, INPUT_SCREEN, RESULT_SCREEN = range(3)
 
@@ -219,7 +219,7 @@ class Game:
             enemy_team_to_id = [convert_pokemon_to_id(pkmn, "pokemon_data.csv") for pkmn in self.enemy_team]
             # self.user_team = get_user_pokemon((get_pokemon(self.enemy_team, "pokemon_data.csv"), 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
             self.user_team, type_matchups = get_user_pokemon(get_pokemon(enemy_team_to_id, "pokemon_data.csv"), "pokemon_data.csv", "chart.csv")
-            print("user team", self.user_team)
+            # print("user team", self.user_team)
             user_team_to_id = convert_team_to_ints(self.user_team)
             print("user team types", get_types(get_pokemon(user_team_to_id, 'pokemon_data.csv')))
             print("type matchups", type_matchups)
