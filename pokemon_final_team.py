@@ -19,7 +19,7 @@ def ideal_bst_range(team: Pokemon | list[Pokemon]):
     """get teh ideal bst range for returning team
     """
     enemy_bst = get_team_bst(team)
-    if isinstance(team, Pokemon):
+    if isinstance(team, Pokemon) or all([team[i-1].bst == team[i].bst for i in range(1, len(team))]):
         return [enemy_bst - 20, enemy_bst + 20]
     else:
         max_bst = max([pokemon.bst for pokemon in team])
@@ -98,9 +98,8 @@ def get_user_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_
         for row in reader:
             poke_types = (row[2], row[3]) if row[3] else row[2]
         
-            if poke_types in top_types or row[2] in enemy_types:
+            if poke_types in [item[0] for item in top_types] or row[2] in enemy_types:
                 possible_poke.append(int(row[0]))
-
     
     poke_data = get_pokemon(possible_poke, file_pokemon)
     po_data = filter_bst_team(poke_data, enemy_bst_range)

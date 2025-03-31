@@ -1,6 +1,7 @@
 import pokemon_class
 from pokemon_type_data_scraper import read_effectiveness
 
+
 def graph_builder(file_path):
     types, effectiveness = read_effectiveness(file_path)
     type_indices = {type_name: idx for idx, type_name in enumerate(types)}
@@ -11,6 +12,7 @@ def graph_builder(file_path):
         for pok_type in types:
             graph.add_attacking_edge(po_type, pok_type, effectiveness[type_indices[po_type]][type_indices[pok_type]])
     return graph
+
 
 def get_effectiveness(graph, attacker, defender):
     if isinstance(defender, tuple):
@@ -23,12 +25,14 @@ def get_effectiveness(graph, attacker, defender):
             if defender in {v.item for v in neighbors}:
                 return weight
 
+
 def get_overall_effectiveness(graph, recommended_types, enemy_types):
     """Calculate the maximum offensive effectiveness of recommended_types against enemy_types."""
     if isinstance(recommended_types, str):
         return get_effectiveness(graph, recommended_types, enemy_types)
     elif isinstance(recommended_types, tuple):
         return max(get_effectiveness(graph, r, enemy_types) for r in recommended_types)
+
 
 def strong_weak(chosen_pokemons):
     strong = {}
@@ -73,6 +77,7 @@ def strong_weak(chosen_pokemons):
                         strong[poke] = strong.get(poke, 0) + 1
     return strong, weak
 
+
 def dict_subtraction(strong, weak):
     final_dict = {}
     for poke_type in weak:
@@ -84,6 +89,7 @@ def dict_subtraction(strong, weak):
             final_dict[poke_type] = weak[poke_type]
     return final_dict
 
+
 def get_attacking_effectiveness(graph, attacker, defender):
     """Get effectiveness of attacker against defender from the graph."""
     vertex = graph.vertices[attacker]
@@ -91,6 +97,7 @@ def get_attacking_effectiveness(graph, attacker, defender):
         if defender in {v.item for v in neighbors}:
             return weight
     return 1.0
+
 
 def get_defense_effectiveness(graph, attack_type, defend_types):
     """Get effectiveness of attack_type against defend_types (product for dual types)."""
@@ -162,7 +169,12 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     strong, weak = strong_weak(enemy_team)
     final_dict = dict_subtraction(strong, weak)
 
-    types = list(final_dict.keys())
+    if not final_dict:
+        types = list(graph.vertices.keys())
+    else:
+        types = list(final_dict.keys())
+
+    # types = list(final_dict.keys())
     single_types = [(t,) for t in types]
     dual_types = [(types[i], types[j]) for i in range(len(types)) for j in range(i + 1, len(types))]
     candidates = single_types + dual_types
@@ -175,7 +187,7 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     enemy_team_copy = list(enemy_team[:])
     results = []
 
-    if len(sorted_candidates) >= len(enemy_team):
+    if len(sorted_candidates) >= len(enemy_team_copy):
         top_candidates = sorted_candidates[:top_x]
 
         for cand, score in top_candidates:
@@ -204,6 +216,18 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
 
 
 if __name__ == '__main__':
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'max-line-length': 120,
+        'disable': ['E1136', 'W0221'],
+        'max-nested-blocks': 4,
+        'allowed_modules': ['pygame', 'requests', 'pandas',
+                            'io', 'math', 'random', 'pokemon_data_scraper',
+                            'graph_algorithm', 'pokemon_final_team', 'pokemon_class', 'pokemon_type_data_scraper']
+    })
+
     results = recommend_top_types(
         ['Water', 'Water', 'Grass', 'Water', ('Ground', 'Fighting'), 'Water'],
         file_path='chart.csv', top_x=6)
