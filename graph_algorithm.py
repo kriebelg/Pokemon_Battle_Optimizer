@@ -3,6 +3,8 @@ from pokemon_type_data_scraper import read_effectiveness
 
 
 def graph_builder(file_path):
+    """return the type graph
+    """
     types, effectiveness = read_effectiveness(file_path)
     type_indices = {type_name: idx for idx, type_name in enumerate(types)}
     graph = pokemon_class.TypeGraph()
@@ -15,6 +17,8 @@ def graph_builder(file_path):
 
 
 def get_effectiveness(graph, attacker, defender):
+    """return the effectieve wieght of types
+    """
     if isinstance(defender, tuple):
         eff1 = get_effectiveness(graph, attacker, defender[0])
         eff2 = get_effectiveness(graph, attacker, defender[1])
@@ -35,6 +39,8 @@ def get_overall_effectiveness(graph, recommended_types, enemy_types):
 
 
 def strong_weak(chosen_pokemons):
+    """return the strong and weak dictionary of the given team
+     """
     strong = {}
     weak = {}
     graph = graph_builder(file_path='chart.csv')
@@ -43,7 +49,8 @@ def strong_weak(chosen_pokemons):
     for chosen_pokemon in chosen_pokemons:
         if isinstance(chosen_pokemon, tuple):
             for pok_type in all_types:
-                max_eff =  max(get_effectiveness(graph, chosen_pokemon[0], pok_type), get_effectiveness(graph, chosen_pokemon[1], pok_type))
+                max_eff = max(get_effectiveness(graph, chosen_pokemon[0], pok_type),
+                              get_effectiveness(graph, chosen_pokemon[1], pok_type))
                 if max_eff == 2.0:
                     strong[pok_type] = strong.get(pok_type, 0) + 1
                 elif max_eff in (0.5, 0.0):
@@ -79,6 +86,8 @@ def strong_weak(chosen_pokemons):
 
 
 def dict_subtraction(strong, weak):
+    """return a subtracted strong and weak dictionary to get the final type dictionary
+    """
     final_dict = {}
     for poke_type in weak:
         if poke_type in strong:
@@ -111,6 +120,7 @@ def get_defense_effectiveness(graph, attack_type, defend_types):
                 break
     return multiplier
 
+
 def score_candidate(graph, candidate_types, enemy_team):
     """Score a candidate type against the enemy team."""
     score = 0
@@ -127,7 +137,9 @@ def score_candidate(graph, candidate_types, enemy_team):
         score += off_eff - def_vuln
     return score
 
+
 def score_assigner(final_dict, enemy_types, graph):
+    """assign a given score to each of the types"""
     temp = {}
     for key in final_dict:
         defense_0 = 0
@@ -155,9 +167,12 @@ def score_assigner(final_dict, enemy_types, graph):
                 attack_2 += 1
             elif type in {vertex.item for vertex in graph.vertices[key].incoming_neighbors[1.0]}:
                 one_point_zero += 1
-        final_score = final_dict[key]*((30*defense_0)+(5*attack_2)+(3*defense_5)+(0.1*one_point_zero)-(4.9*defense_2)-(30*attack_0)-(2.9*attack_5))
+        final_score = final_dict[key] * (
+                    (30 * defense_0) + (5 * attack_2) + (3 * defense_5) + (0.1 * one_point_zero) - (4.9 * defense_2) - (
+                        30 * attack_0) - (2.9 * attack_5))
         temp[key] = final_score
     return temp
+
 
 def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
     """Recommend the top X types against the enemy team."""
@@ -216,7 +231,6 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
 
 
 if __name__ == '__main__':
-
     import python_ta
 
     python_ta.check_all(config={

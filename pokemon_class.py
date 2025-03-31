@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Optional
 
 
-
 class Type:
     """
     A Pokemon type.
@@ -25,10 +24,6 @@ class Type:
         self.effectiveness = effectiveness_dict
 
 
-
-
-
-
 class Pokemon:
     """
     A class to represent a Pokemon.
@@ -48,7 +43,8 @@ class Pokemon:
     stats: list[int]
     bst: int
 
-    def __init__(self, pokemon_id: int, name: str, type1: Type, type2: Optional[Type], attack: int, defense: int, spec_attack: int, spec_defense: int, speed: int):
+    def __init__(self, pokemon_id: int, name: str, type1: Type, type2: Optional[Type], attack: int, defense: int,
+                 spec_attack: int, spec_defense: int, speed: int):
         """Initialize a new Pokemon instance."""
         self.pokemon_id = pokemon_id
         self.name = name
@@ -59,6 +55,7 @@ class Pokemon:
 
 
 from typing import Any, Set, Dict
+
 
 class TypeVertex:
     """
@@ -102,17 +99,20 @@ class TypeGraph:
         self.vertices = {}  # Initialize Empty Graph
 
     def add_vertex(self, item: Any) -> None:
-        self.vertices[item] = TypeVertex(item, {0.0: set(), 0.5: set(), 1.0: set(), 2.0: set()}, {0.0: set(), 0.5: set(), 1.0: set(), 2.0: set()})
+        """add incoming and outcoming neighbours to vertices in graph
+        """
+        self.vertices[item] = TypeVertex(item, {0.0: set(), 0.5: set(), 1.0: set(), 2.0: set()},
+                                         {0.0: set(), 0.5: set(), 1.0: set(), 2.0: set()})
 
     def add_attacking_edge(self, item1: Any, item2: Any, weight: float) -> None:
-        '''
+        """
         Adds an edge between two pokemon types in the graph such that item1 -> item2
 
         :param item1: Type of attacking pokemon
         :param item2: Type of recieving pokemon
         :param weight: The effectiveness of the attack (2.0,1.0,0.5,0)
         :return: None
-        '''
+        """
         if item1 in self.vertices and item2 in self.vertices:
             if item1 != item2:
                 self.vertices[item1].outgoing_neighbors[weight].add(self.vertices[item2])
@@ -122,6 +122,8 @@ class TypeGraph:
                 self.vertices[item1].incoming_neighbors[weight].add(self.vertices[item2])
 
     def spesific_vertex_connections(self, item1: Any):
+        """specify specific vertex connections
+        """
         one_half_attacks = []
         one_half_incoming = []
         two_attacks = []
@@ -150,21 +152,3 @@ class TypeGraph:
                 else:
                     zero_incoming.extend([elem.item for elem in incoming_connections])
         return one_half_attacks, one_half_incoming, one_attacks, one_incoming, two_attacks, two_incoming, zero_attacks, zero_incoming
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
