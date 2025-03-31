@@ -217,7 +217,9 @@ class Game:
             self.error_message = "Invalid Pokémon names: " + ", ".join(invalid_names)
         else:
             # self.user_team = get_user_pokemon((get_pokemon(self.enemy_team, "pokemon_data.csv"), 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
-            self.user_team = get_user_pokemon(get_pokemon([convert_pokemon_to_id(pkmn, "pokemon_data.csv") for pkmn in self.enemy_team], "pokemon_data.csv"), "pokemon_data.csv", "chart.csv")
+            self.user_team, type_matchups = get_user_pokemon(get_pokemon([convert_pokemon_to_id(pkmn, "pokemon_data.csv") for pkmn in self.enemy_team], \
+                                                          "pokemon_data.csv"), "pokemon_data.csv", "chart.csv")
+            self.align_teams()
             self.pokemon_sprites.update({name.lower(): self.load_sprite(name) for name in set(self.user_team)})
             self.state = RESULT_SCREEN
             self.error_message = None
@@ -240,6 +242,30 @@ class Game:
         else:
             self.enemy_team[self.input_index] += event.unicode.lower()
 
+    def align_teams(self) -> None:
+        top_types = recommend_top_types(self.enemy_team, "chart.csv", len(self.enemy_team))
+        type_matchup = [(item[0], item[1]) for item in top_types]
+        enemy_pokemon_list = get_pokemon(self.enemy_team, "pokemon_data.csv")
+        user_pokemon_list = get_pokemon(self.user_team, "pokemon_data.csv")
+        
+        type_matchup_dict = {etype: i for i, (etype, _) in enumerate(type_matchup)}
+        for i, user_pkmn in enumerate(user_pokemon_list):
+            user_pkmn_type = (user_pkmn.type1, user_pkmn.type2 if user_pkmn.type2 else None)
+            if user_pkmn_type in type_matchup_dict:
+                target_index = type_matchup_dict[user_pkmn_type]
+                self.user_team[i], self.user_team[target_index] = self.user_team[target_index], self.user_team[i]
+
+        # for i in range(6):
+        #     current_user_pkmn = user_pokemon_list[i]
+        #     user_pkmn_type = (current_user_pkmn.type1, current_user_pkmn.type2) \
+        #         if current_user_pkmn.type2 else current_user_pkmn.type1
+        #     for j in range(6):
+        #         current_enemy_pkmn = enemy_pokemon_list[j]
+        #         enemy_pkmn_type = (current_enemy_pkmn.type1, current_enemy_pkmn.type2) \
+        #             if current_enemy_pkmn.type2 else current_enemy_pkmn.type1
+        #         if user_pkmn_type == enemy_pkmn_type:
+        #             self.user_team[i], self.user_team[j] = self.user_team[j], self.user_team[i]       
+
     def run(self):
         while self.running:
             self.screen.blit(self.background, (0, 0))
@@ -249,12 +275,6 @@ class Game:
                 self.handle_event(event, mouse_pos)
             pygame.display.flip()
         pygame.quit()
-
-def convert_team_to_ints(team) -> list[int]:
-    id_list = []
-    for pkmn in team:
-        id_list.append(convert_pokemon_to_id(pkmn, "pokemon_data.csv"))
-    return id_list
 
 def generate_random_team(data):
     """Generates a random Pokémon team."""

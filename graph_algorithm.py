@@ -204,7 +204,7 @@ def recommend_top_types(enemy_team, file_path='chart.csv', top_x=None):
 
 if __name__ == '__main__':
     results = recommend_top_types(
-        ['Fire', 'Grass', 'Electric', 'Dragon', ('Ground', 'Fire'), 'Water'],
+        ['Water', 'Water', 'Grass', 'Water', ('Ground', 'Fighting'), 'Water'],
         file_path='chart.csv', top_x=6)
     user_team = [item[0] for item in results]
     enemy_team = [item[1] for item in results]
