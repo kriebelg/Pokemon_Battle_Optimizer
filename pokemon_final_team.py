@@ -3,6 +3,7 @@ import pokemon_data_scraper
 from pokemon_class import Pokemon, Type
 from graph_algorithm import recommend_top_types
 
+
 def get_team_bst(team: Pokemon | list[Pokemon]):
     """gets the teams bst category"""
     if isinstance(team, Pokemon):
@@ -13,7 +14,10 @@ def get_team_bst(team: Pokemon | list[Pokemon]):
             total_bst += get_team_bst(pokemon)
         return total_bst // len(team)
 
+
 def ideal_bst_range(team: Pokemon | list[Pokemon]):
+    """get teh ideal bst range for returning team
+    """
     enemy_bst = get_team_bst(team)
     if isinstance(team, Pokemon):
         return [enemy_bst - 10, enemy_bst + 10]
@@ -22,14 +26,17 @@ def ideal_bst_range(team: Pokemon | list[Pokemon]):
         min_bst = min([pokemon.bst for pokemon in team])
         return [min_bst, max_bst]
 
+
 def get_pokemon(team: list[int], file_path='pokemon_data.csv'):
+    """get pokemon based on pokemon numbers
+    """
     poke_list = []
     # pokemon = Pokemon(0, '', Type('', {'':0.0}), Type('', {}), 0, 0, 0, 0, 0)
     for poke in team:
         data = pokemon_data_scraper.get_pokemon_data([poke], file_path)
 
         if not data or not data[0]:
-            continue 
+            continue
 
         pokemon = Pokemon(
             pokemon_id=data[0][0],
@@ -45,7 +52,10 @@ def get_pokemon(team: list[int], file_path='pokemon_data.csv'):
         poke_list.append(pokemon)
     return poke_list
 
+
 def filter_bst_team(team: list[Pokemon], bst_range: list[int]):
+    """filter the team based on the ideal bst range
+    """
     new_team = []
 
     for pokemon in team:
@@ -53,8 +63,11 @@ def filter_bst_team(team: list[Pokemon], bst_range: list[int]):
             new_team.append(pokemon)
     return new_team
 
+
 def get_types(team: list[Pokemon]):
-    types = [] 
+    """get the types of the given pokemon team
+    """
+    types = []
     for pokemon in team:
         if pokemon.type2 is None:
             types.append(pokemon.type1)
@@ -62,8 +75,10 @@ def get_types(team: list[Pokemon]):
             types.append((pokemon.type1, pokemon.type2))
     return tuple(types)
 
+
 def get_user_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_types='chart.csv'):
-    '''get enemy pokemon based on bst and type'''
+    """get enemy pokemon based on bst and type
+    """
     types = get_types(team)
     type = recommend_top_types(types, file_types, len(team))
     typ = [item[0] for item in type]
@@ -74,22 +89,23 @@ def get_user_pokemon(team: list[Pokemon], file_pokemon='pokemon_data.csv', file_
         reader = csv.reader(file)
         for row in reader:
             poke_types = (row[2], row[3]) if row[3] else row[2]
-        
+
             if poke_types in types or row[2] in typ:
                 possible_poke.append(int(row[0]))
-    
+
     poke_data = get_pokemon(possible_poke, file_pokemon)
     po_data = filter_bst_team(poke_data, enemy_bst_range)
-    
+
     if len(po_data) < 6:
         remaining_needed = 6 - len(po_data)
         additional_pokemon = [poke for poke in poke_data if poke not in po_data][:remaining_needed]
         po_data.extend(additional_pokemon)
-    
+
     pok_sorted = sorted(po_data, key=lambda x: x.bst, reverse=True)
 
     return [pokemon.name for pokemon in pok_sorted[:6]]
 
+
 if __name__ == '__main__':
-    g = get_user_pokemon(get_pokemon([4,4,4,1,1,1], 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
+    g = get_user_pokemon(get_pokemon([4, 4, 4, 1, 1, 1], 'pokemon_data.csv'), 'pokemon_data.csv', 'chart.csv')
     print(g)
