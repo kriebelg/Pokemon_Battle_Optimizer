@@ -1,4 +1,4 @@
-"""Main function for the Pokémon Battle Matchup Optimizer."""
+"""Main file for the Pokémon Battle Matchup Optimizer."""
 import io
 import random
 import math
