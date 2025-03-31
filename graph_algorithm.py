@@ -49,7 +49,7 @@ def strong_weak(chosen_pokemons):
                 combined_eff = get_effectiveness(graph, pok_type, chosen_pokemon)
                 if combined_eff > 1.0:
                     weak[pok_type] = weak.get(pok_type, 0) + 1
-                elif combined_eff < 1.0:
+                elif combined_eff <= 1.0:
                     strong[pok_type] = strong.get(pok_type, 0) + 1
         else:
             pokemon_vertex = graph.vertices[chosen_pokemon]
